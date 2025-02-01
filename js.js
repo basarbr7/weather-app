@@ -23,6 +23,11 @@ async function fetchWeather(city) {
   }
 };
 
+window.onload = function () {
+  const lastCity = localStorage.getItem("lastCity") || "dhaka"; 
+  document.getElementById("city-input").value = lastCity;
+  fetchWeather(lastCity); 
+};
  
 const displayWeather = (data) => {
   document.querySelector(".country").innerHTML = `${data.name}, ${data.sys.country}`;
@@ -36,7 +41,6 @@ const displayWeather = (data) => {
   document.querySelector(".Pressure").innerHTML = `${data.main.pressure} mb`;
 };
   
-
 document.getElementById("search-button").addEventListener("click", () => {
   const city = document.getElementById("city-input").value.trim();
   if (city) {
@@ -48,12 +52,6 @@ document.getElementById("search-button").addEventListener("click", () => {
   cityList.classList.remove("opacity-100", "visible");
   cityList.classList.add("opacity-0", "invisible");
 });
-
-window.onload = function () {
-  const lastCity = localStorage.getItem("lastCity") || "dhaka"; 
-  document.getElementById("city-input").value = lastCity;
-  fetchWeather(lastCity); 
-};
 
 function showTime(){
   let weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
@@ -99,7 +97,6 @@ async function fetchCities() {
     cityList.innerHTML="Something is wrong....."
   }
 }
-
 
 input.addEventListener("input", (e)=>{
   let inputValue = e.target.value.toLowerCase();
