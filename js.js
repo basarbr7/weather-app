@@ -42,17 +42,17 @@ const displayWeather = (data) => {
 };
   
 
-document.getElementById("search-button").addEventListener("click", () => {
-  const city = document.getElementById("city-input").value.trim();
-  if (city) {
-    fetchWeather(city);
-  } else {
-    weatherResult.innerHTML = `<p style="color: red;">Please enter a city name.</p>`;
-  }
-  // localStorage.setItem("lastCity", city);
-  cityList.classList.remove("opacity-100", "visible");
-  cityList.classList.add("opacity-0", "invisible");
-});
+// document.getElementById("search-button").addEventListener("click", () => {
+//   const city = document.getElementById("city-input").value.trim();
+//   if (city) {
+//     fetchWeather(city);
+//   } else {
+//     weatherResult.innerHTML = `<p style="color: red;">Please enter a city name.</p>`;
+//   }
+//   // localStorage.setItem("lastCity", city);
+//   cityList.classList.remove("opacity-100", "visible");
+//   cityList.classList.add("opacity-0", "invisible");
+// });
 
 function showTime(){
   let weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
@@ -77,7 +77,7 @@ async function fetchCities() {
 
     data.forEach(item => {
       let cityButton = document.createElement("button")
-        cityButton.classList.add("py-2", "bg-[#204c84]", "cursor-pointer")
+        cityButton.classList.add("py-2", "hover:bg-[gray]", "cursor-pointer")
         cityButton.innerHTML = item.city
 
         cityButton.addEventListener("click", function(){
