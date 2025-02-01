@@ -25,7 +25,8 @@ async function fetchWeather(city) {
 
 window.onload = function () {
   const lastCity = localStorage.getItem("lastCity") || "dhaka"; 
-  document.getElementById("city-input").value = lastCity;
+  input.value = lastCity;
+  input.value= ""
   fetchWeather(lastCity); 
 };
 
@@ -41,19 +42,6 @@ const displayWeather = (data) => {
   document.querySelector(".Pressure").innerHTML = `${data.main.pressure} mb`;
 };
   
-
-// document.getElementById("search-button").addEventListener("click", () => {
-//   const city = document.getElementById("city-input").value.trim();
-//   if (city) {
-//     fetchWeather(city);
-//   } else {
-//     weatherResult.innerHTML = `<p style="color: red;">Please enter a city name.</p>`;
-//   }
-//   // localStorage.setItem("lastCity", city);
-//   cityList.classList.remove("opacity-100", "visible");
-//   cityList.classList.add("opacity-0", "invisible");
-// });
-
 function showTime(){
   let weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -63,7 +51,7 @@ function showTime(){
   let ampm = hour>=12 ? "PM":"AM"
       hour = hour % 12 || 12;
      
-      timeShow.innerHTML = `${months[date.getMonth()]}, ${weekDays[date.getDay()]}, <span class="bg-red-500 px-1">${hour}:${date.getMinutes().toString().padStart(2, "0")}:${date.getSeconds().toString().padStart(2, "0")} ${ampm}</span>`;
+  timeShow.innerHTML = `${months[date.getMonth()]}, ${weekDays[date.getDay()]}, <span class="bg-[#363612] px-1">${hour}:${date.getMinutes().toString().padStart(2, "0")}:${date.getSeconds().toString().padStart(2, "0")} ${ampm}</span>`;
 }
 setInterval(showTime, 1000)
 
@@ -85,20 +73,15 @@ async function fetchCities() {
           fetchWeather(item.city)
           cityList.classList.remove("opacity-100", "visible");
           cityList.classList.add("opacity-0", "invisible");
-
-          // localStorage.setItem("lastCity", input.value);
         })
-
         cityList.append(cityButton)
     })
-
   } 
   catch (error) {
     console.log(error);
     cityList.innerHTML="Something is wrong....."
   }
 }
-
 
 input.addEventListener("input", (e)=>{
   let inputValue = e.target.value.toLowerCase();
@@ -110,9 +93,7 @@ input.addEventListener("input", (e)=>{
     cityList.classList.remove("opacity-100", "visible");
     cityList.classList.add("opacity-0", "invisible");
   }
-
   let filterAllButton = document.querySelectorAll(".cityList button")
-
   filterAllButton.forEach(item =>{
     if(item.innerHTML.toLowerCase().includes(inputValue)){
       item.classList.remove("hidden")
