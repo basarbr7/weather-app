@@ -28,7 +28,7 @@ window.onload = function () {
   document.getElementById("city-input").value = lastCity;
   fetchWeather(lastCity); 
 };
- 
+
 const displayWeather = (data) => {
   document.querySelector(".country").innerHTML = `${data.name}, ${data.sys.country}`;
   document.querySelector(".temp").innerHTML = `${Math.round(data.main.temp)}°`;
@@ -41,6 +41,7 @@ const displayWeather = (data) => {
   document.querySelector(".Pressure").innerHTML = `${data.main.pressure} mb`;
 };
   
+
 document.getElementById("search-button").addEventListener("click", () => {
   const city = document.getElementById("city-input").value.trim();
   if (city) {
@@ -97,6 +98,7 @@ async function fetchCities() {
     cityList.innerHTML="Something is wrong....."
   }
 }
+
 
 input.addEventListener("input", (e)=>{
   let inputValue = e.target.value.toLowerCase();
