@@ -13,7 +13,7 @@ async function fetchWeather(city) {
       throw new Error("City not found");
     }
     const data = await response.json(); 
-    // console.log(data);
+    console.log(data);
     displayWeather(data);
     localStorage.setItem("lastCity", input.value);
   }
@@ -31,6 +31,10 @@ window.onload = function () {
 };
 
 const displayWeather = (data) => {
+  if(data){
+    let image = document.querySelector(".images")
+    image.innerHTML = `<img class="images" src="image/${data.weather[0].main}.svg" alt="">`
+  }
   document.querySelector(".country").innerHTML = `${data.name}, ${data.sys.country}`;
   document.querySelector(".temp").innerHTML = `${Math.round(data.main.temp)}°`;
   document.querySelector(".weatherDesc").innerHTML = `${data.weather[0].description}`;
