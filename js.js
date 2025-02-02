@@ -35,9 +35,11 @@ const displayWeather = (data) => {
     let currentTime = new Date()
     let sunset = new Date(data.sys.sunset*1000)
     if(currentTime<sunset){
-      document.querySelector(".sunMoon").innerHTML = `<img src="image/${data.weather[0].main}.svg" alt="">`
-    }else{
       document.querySelector(".sunMoon").innerHTML = `<img src="image/sunset/${data.weather[0].main}.svg" alt="">`
+      console.log("night");
+    }else{
+      document.querySelector(".sunMoon").innerHTML = `<img src="image/sunrise/${data.weather[0].main}.svg" alt="">`
+      console.log("day");
     }
   }
   document.querySelector(".country").innerHTML = `${data.name}, ${data.sys.country}`;
