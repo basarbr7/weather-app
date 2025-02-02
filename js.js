@@ -32,8 +32,13 @@ window.onload = function () {
 
 const displayWeather = (data) => {
   if(data){
-    let image = document.querySelector(".images")
-    image.innerHTML = `<img class="images" src="image/${data.weather[0].main}.svg" alt="">`
+    let currentTime = new Date()
+    let sunset = new Date(data.sys.sunset*1000)
+    if(currentTime<sunset){
+      document.querySelector(".sunMoon").innerHTML = `<img src="image/${data.weather[0].main}.svg" alt="">`
+    }else{
+      document.querySelector(".sunMoon").innerHTML = `<img src="image/sunset/${data.weather[0].main}.svg" alt="">`
+    }
   }
   document.querySelector(".country").innerHTML = `${data.name}, ${data.sys.country}`;
   document.querySelector(".temp").innerHTML = `${Math.round(data.main.temp)}°`;
