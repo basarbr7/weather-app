@@ -31,17 +31,16 @@ window.onload = function () {
 };
 
 const displayWeather = (data) => {
-  if(data){
-    let currentTime = new Date()
-    let sunset = new Date(data.sys.sunset*1000)
-    if(currentTime<sunset){
-      document.querySelector(".sunMoon").innerHTML = `<img src="image/sunset/${data.weather[0].main}.svg" alt="">`
-      console.log("night");
-    }else{
-      document.querySelector(".sunMoon").innerHTML = `<img src="image/sunrise/${data.weather[0].main}.svg" alt="">`
-      console.log("day");
-    }
-  }
+  if (!data) return;
+
+  const currentTime = new Date();
+  const sunset = new Date(data.sys.sunset * 1000);
+  const sunMoonElement = document.querySelector(".sunMoon");
+  const isDay = currentTime < sunset;
+
+  sunMoonElement.innerHTML = `<img src="image/${isDay ? 'sunrise' : 'sunset'}/${data.weather[0].main}.svg" alt="">`;
+  console.log(isDay ? "day" : "night");
+  
   document.querySelector(".country").innerHTML = `${data.name}, ${data.sys.country}`;
   document.querySelector(".temp").innerHTML = `${Math.round(data.main.temp)}°`;
   document.querySelector(".weatherDesc").innerHTML = `${data.weather[0].description}`;
