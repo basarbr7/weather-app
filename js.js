@@ -23,23 +23,15 @@ async function fetchWeather(city) {
   }
 };
 
-window.onload = function () {
-  const lastCity = localStorage.getItem("lastCity") || "dhaka"; 
-  input.value = lastCity;
-  input.value= ""
-  fetchWeather(lastCity); 
-};
-
 const displayWeather = (data) => {
-  if (!data) return;
+  if (!data || !data.sys || !data.timezone) {
+    console.error("Invalid data or missing properties.");
+    return;
+  }
 
-  const currentTime = new Date();
-  const sunset = new Date(data.sys.sunset * 1000);
-  const sunMoonElement = document.querySelector(".sunMoon");
-  const isDay = currentTime < sunset;
+  displayTime(data);
 
-  sunMoonElement.innerHTML = `<img src="image/${isDay ? 'sunrise' : 'sunset'}/${data.weather[0].main}.svg" alt="">`;
-  console.log(isDay ? "day" : "night");
+  sunMoon(data);
   
   document.querySelector(".country").innerHTML = `${data.name}, ${data.sys.country}`;
   document.querySelector(".temp").innerHTML = `${Math.round(data.main.temp)}°`;
@@ -51,19 +43,54 @@ const displayWeather = (data) => {
   document.querySelector(".visibility").innerHTML = `${(data.visibility)/1000} km`;
   document.querySelector(".Pressure").innerHTML = `${data.main.pressure} mb`;
 };
-  
-function showTime(){
-  let weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-  let date = new Date()
-  let hour = date.getHours()
-  let ampm = hour>=12 ? "PM":"AM"
-      hour = hour % 12 || 12;
-     
-  timeShow.innerHTML = `${months[date.getMonth()]}, ${weekDays[date.getDay()]}, <span class="bg-[#363612] px-1">${hour}:${date.getMinutes().toString().padStart(2, "0")}:${date.getSeconds().toString().padStart(2, "0")} ${ampm}</span>`;
+let timeInterval= null;
+function displayTime(data){
+  if (timeInterval) {
+    clearInterval(timeInterval);
+  }
+  const updateTime = () => {
+    let weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+    let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    
+    let date = new Date();
+    let timeZone = data.timezone;
+    let timeZoneMiliSecond = timeZone * 1000;
+    let localTime = new Date(date.getTime() + timeZoneMiliSecond);
+    let hours = localTime.getUTCHours();
+    let minutes = localTime.getUTCMinutes();
+    let seconds = localTime.getUTCSeconds();
+    let ampm = hours >= 12 ? "pm" : "am"
+    let hour = hours % 12 || 12;
+    
+    let day = localTime.getUTCDay();
+    let month = localTime.getUTCMonth()
+    timeShow.innerHTML = `${months[month]}, ${weekDays[day]}, <span class="bg-[#363612] px-1">${hour}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")} ${ampm}</span>`;
+  };
+  updateTime();
+  timeInterval = setInterval(updateTime, 1000); 
 }
-setInterval(showTime, 1000)
+  
+const sunMoon = (data) => {
+  const timeZoneOffset = data.timezone;
+  console.log("Timezone Offset (seconds):", timeZoneOffset);
+
+  const currentTime = new Date().getTime() + timeZoneOffset * 1000;
+  console.log("Current Time (local):", new Date(currentTime).toUTCString());
+
+  const sunriseTime = (data.sys.sunrise + timeZoneOffset) * 1000;
+  const sunsetTime = (data.sys.sunset + timeZoneOffset) * 1000;
+  console.log("Sunrise Time (local):", new Date(sunriseTime).toUTCString());
+  console.log("Sunset Time (local):", new Date(sunsetTime).toUTCString());
+
+  if (currentTime >= sunriseTime && currentTime < sunsetTime) {
+    console.log("It's daytime.");
+    document.querySelector(".sunMoon").innerHTML = `<img src="image/sunrise/${data.weather[0].main}.svg" alt="Day">`;
+  } else {
+    console.log("It's nighttime.");
+    document.querySelector(".sunMoon").innerHTML = `<img src="image/sunset/${data.weather[0].main}.svg" alt="Night">`;
+  }
+};
 
 
 async function fetchCities() {
@@ -116,3 +143,9 @@ input.addEventListener("input", (e)=>{
 
 fetchCities()
 
+window.onload = function () {
+  const lastCity = localStorage.getItem("lastCity") || "dhaka"; 
+  input.value = lastCity;
+  input.value= ""
+  fetchWeather(lastCity); 
+};
