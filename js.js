@@ -33,7 +33,7 @@ const displayWeather = (data) => {
 
   sunMoon(data);
   
-  document.querySelector(".country").innerHTML = `${data.name}, ${data.sys.country}`;
+  document.querySelector(".country").innerHTML = `${data.name}, ${data.sys.country}<span><i class="rotate-180 ml-2 text-[12px] fa-solid fa-house text-[#b2acac]"></i></span>`;
   document.querySelector(".temp").innerHTML = `${Math.round(data.main.temp)}°`;
   document.querySelector(".weatherDesc").innerHTML = `${data.weather[0].description}`;
   document.querySelector(".feelsLike").innerHTML = `<span class="text-[#b9b8b8]">Feels like</span>  &nbsp ${Math.round(data.main.feels_like)}°`;
